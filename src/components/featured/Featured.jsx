@@ -1,7 +1,28 @@
 import { InfoOutlined, PlayArrow } from "@material-ui/icons";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import "./Featured.scss";
 
 const Featured = (props) => {
+    const [content, setContent] = useState({});
+
+    useEffect(() => {
+        const getRandomContent = async () => {
+            try {
+                const res = await axios.get(`/movies/random?type=${props.type}`,
+                {
+                    headers: {
+                        token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMGFhZWFlNzVkZjljMjlkODQ2MWMzZCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYyOTgxNDc5MywiZXhwIjoxNjMwMjQ2NzkzfQ.axmFhUfvxcYcg_0Rf0bXp-pZ7Is4vzjxF730XDxEPp0"
+                    }
+                });
+                setContent(res.data[0]);
+            } catch(err) {
+                console.log(err);
+            }
+        };
+        getRandomContent();
+    }, [props.type]);
+
     return (
         <div className="featured">
             { props.type && (
@@ -12,9 +33,9 @@ const Featured = (props) => {
                     </select>
                 </div>
             ) }
-            <img src="https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=976&q=80" alt="image banner" />
+            <img src={content.img} alt="image banner" />
             <div className="info">
-                <img src="https://www.kindpng.com/picc/m/149-1492314_fury-movie-logo-title-screen-fury-movie-logo.png" alt="movie image" />
+                <img src={content.imgTitle} alt="movie image" />
                 <span className="desc">Nulla amet duis et sit Lorem nulla incididunt esse eiusmod non laborum. Sit incididunt aliqua adipisicing mollit quis ullamco exercitation cupidatat irure nostrud anim occaecat laborum veniam. Cillum ipsum magna aute exercitation exercitation proident. Aliqua fugiat occaecat eu in consectetur adipisicing eu magna Lorem quis laborum qui commodo deserunt.</span> 
                 <div className="buttons">
                     <button className="play">
